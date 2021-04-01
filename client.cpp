@@ -12,8 +12,8 @@ int main()
         nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
         nzmqt::ZMQSocket *sub = context->createSocket( nzmqt::ZMQSocket::TYP_SUB, context );
         nzmqt::ZMQSocket *send = context->createSocket( nzmqt::ZMQSocket::TYP_PUSH, context );
-        sub->connectTo("tcp://localhost:5555"); // Nu dus in plaats van "tcp://benternet.pxl-ea-ict.be:24042"
-        send->connectTo("tcp://localhost:5556"); // Nu dus in plaats van "tcp://benternet.pxl-ea-ict.be:24041"
+        sub->connectTo("tcp://localhost:5555"); // Nu dus in plaats van "tcp://benternet.pxl-ea-ict.be:24042" om gewoon locaal te testen
+        send->connectTo("tcp://localhost:5556"); // Nu dus in plaats van "tcp://benternet.pxl-ea-ict.be:24041" om gewoon locaal te testen
         sub->subscribeTo("");
 
         if( !send->isConnected() || !sub->isConnected() )
