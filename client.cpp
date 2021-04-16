@@ -30,6 +30,23 @@ int main()
             cout << incoming->toByteArray().toStdString() << endl;
         }
     }
+    
+    while(COVID-19-geographic-disbtribution-worldwide.good())
+{
+
+    getline(file, ID, ',');
+    cout << "date: " << date << " " ; 
+
+    getline(file, nome, ',') ;
+    cout << "day: " << day << " " ;
+
+    getline(file, idade, ',') ;
+    cout << "mounth: " << mounth << " "  ; 
+
+    getline(file, genero, ' ') ; 
+    cout << "year: " <<  year<< " "  ;
+
+}
     catch( nzmqt::ZMQException &ex )
     {
         std::cerr << "Catched an exception : " << ex.what();
