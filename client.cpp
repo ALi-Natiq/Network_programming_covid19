@@ -1,59 +1,57 @@
-#include <stdio.h>
 #include <iostream>
-#include <zmq.h>
 #include <zmq.hpp>
 #include <nzmqt/nzmqt.hpp>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <utility> // std::pair
-
-//https://ar-carrefour.blogspot.com/?m=1#
-
+#include <QMutex>
 using namespace std;
-void read_record();
-void * context; //Global context, because you only need one !
 
 int main()
 {
+    cout << "Hello World!" << endl;
     try
     {
         nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
-        nzmqt::ZMQSocket *rcv = context->createSocket( nzmqt::ZMQSocket::TYP_PULL, context );
-        nzmqt::ZMQSocket *publ = context->createSocket( nzmqt::ZMQSocket::TYP_PUB, context );
-        //nzmqt::ZMQSocket *sub = context->createSocket( nzmqt::ZMQSocket::TYP_SUB, context );
-       // nzmqt::ZMQSocket *send = context->createSocket( nzmqt::ZMQSocket::TYP_PUSH, context );
-        nzmqt::ZMQSocket *socket = context->createSocket( nzmqt::ZMQSocket::TYP_REQ, context );
-        //sub->connectTo("tcp://192.168.200.212:5554");
-        //send->connectTo("tcp://192.168.200.212:5555");
-        rcv->connectTo("tcp://192.168.200.212:5554");
-        publ->connectTo("tcp://192.168.200.212:555");
-        socket->connectTo("tcp://192.168.200.212:5555");
-        nzmqt::ZMQMessage msg = nzmqt::ZMQMessage(QString("corona>doden>Ali>").toUtf8());
-        publ->sendMessage(msg);
+        nzmqt::ZMQSocket *sub = context->createSocket( nzmqt::ZMQSocket::TYP_SUB, context );
+        nzmqt::ZMQSocket *send = context->createSocket( nzmqt::ZMQSocket::TYP_PUSH, context );
+        sub->connectTo("tcp://192.168.200.212:5554");
+        send->connectTo("tcp://192.168.200.212:5555");
+        sub->subscribeTo("corona>doden>");
+        string naam;
+        string comando;
+        string land;
+        cout << "Geef je naam in " << endl;
+        getline(cin,naam);
+        cout << "Geef je comando in " << endl;
+        getline(cin,comando);
+        cout << "Geef het land in " << endl;
+        getline(cin,land);
 
-        cout << "Sending message ..." << endl;
-       // nzmqt::ZMQMessage msg = nzmqt::ZMQMessage(QString("Test456").toUtf8());
-        socket->sendMessage(msg);
-        cout << "Sending message ..." << endl;
+        cout << naam << "," << comando <<"," << land <<endl;
 
-        nzmqt::ZMQMessage * incoming = new nzmqt::ZMQMessage();
-        while(socket->isConnected());
-        while( rcv->isConnected() )
-        {
-           rcv->receiveMessage(incoming,0);
-           QString response = QString(incoming->toByteArray());
-           cout << response.toStdString() <<endl;
-           // cout << incoming->toByteArray().toStdString() << endl;
+
+        while(1){
+
         }
-    }
 
+        if( !send->isConnected() || !sub->isConnected() )
+            {
+                cerr << "NOT CONNECTED !!!" << endl;
+            }
+        nzmqt::ZMQMessage msg = nzmqt::ZMQMessage(QString::fromStdString("?corona>"+naam+">"+comando+">"+land+">").toUtf8());
+        send->sendMessage(msg);
+        //nzmqt::ZMQMessage * incoming = new nzmqt::ZMQMessage();
+
+//        while( sub->isConnected() )
+//        {
+//           sub->receiveMessage(incoming,0);
+//           QString response = QString(incoming->toByteArray());
+//           cout << response.toStdString() <<endl;
+//           // cout << incoming->toByteArray().toStdString() << endl;
+//        }
+    }
     catch( nzmqt::ZMQException &ex )
     {
         std::cerr << "Catched an exception : " << ex.what();
     }
-
-
     return 0;
 }
 
