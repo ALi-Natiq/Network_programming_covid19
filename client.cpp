@@ -55,64 +55,94 @@ int main()
     return 0;
 }
 
-void read_record()
+vector<vector<string>> parse2DCsvFile(string inputFileName) {
+
+    vector<vector<string> > data;
+    ifstream inputFile(inputFileName);
+    int l = 0;
+
+    while (inputFile) {
+        l++;
+        string line;
+        if (!getline(inputFile, line)) break;
+        if (line[0] != '#') {
+            istringstream lineStream(line);
+            vector<string> record;
+
+            while (lineStream) {
+                string cel;
+                if (!getline(lineStream, cel, ','))
+                    break;
+                try {
+                    //cout << cel << endl ;
+                    record.push_back(cel);
+                }
+                catch (const std::invalid_argument e) {
+                    cout << "NaN found in file " << inputFileName << " cel " << l
+                         << endl;
+                    e.what();
+                }
+            }
+
+            data.push_back(record);
+        }
+    }
+
+    if (!inputFile.eof()) {
+        cerr << "Could not read file " << inputFileName << "\n";
+        __throw_invalid_argument("File not found.");
+    }
+
+    return data;
+}
+
+int main()
 {
+    const int DAY=1 ;
+    const int MONTH=2 ;
+    const int YEAR=3 ;
+    const int CASES=4 ;
+    const int DEATHS=5 ;
+    const int LAND=6 ;
 
-   // File pointer
-   fstream fin;
+    string day;
+    string month;
+    string year;
+    string country;
+    string command;
+    cout << "Geef de dag in " << endl;
+    getline(cin,day);
+    cout << "Geef de maand in " << endl;
+    getline(cin,month);
+    cout << "Geef het jaar in " << endl;
+    getline(cin,year);
+    cout << "Geef het land in (Begint met Groot letter) " << endl;
+    getline(cin,country);
+    cout << "Geef het comando in : Voor besmettingen: 1 , Voor doden: 2 " << endl;
+    getline(cin,command);
 
-   // Open an existing file
-   fin.open("COVID-19-geographic-disbtribution-worldwide.csv", ios::in);
+    vector<vector<string>> data = parse2DCsvFile("C:\\COVID-19-geographic-disbtribution-worldwide.csv");
 
-   // Get the roll number
-   // of which the data is required
-   int rollnum, roll2, count = 0;
-   cout << "Enter the roll number "
-        << "of the country to display details: ";
-   cin >> rollnum;
+    for (vector<string> record : data) { //for each loop
+       //for (string x : record)
+        if(command=="1")
+        {
+            if (record[DAY]==day &&record[MONTH]==month && record[YEAR]==year && record[LAND]==country)
+            cout <<"Land: " << record[LAND] <<"\n" << "Datum: "<< record[DAY] <<"/" << record[MONTH] <<"/" << record[YEAR] << "\n" << "Aantal besmetten: "<< record[CASES]<< endl;
+            //else
+            //cout << "Er zijn geen besmettingen voor dit datum" << endl;
+        }
 
-   // Read the Data from the file
-   // as String Vector
-   vector<string> row;
-   string line, word, temp;
+        if(command=="2")
+        {
+            if (record[DAY]==day &&record[MONTH]==month && record[YEAR]==year && record[LAND]==country)
+            cout <<"Land: " << record[LAND] <<"\n" << "Datum: "<< record[DAY] <<"/" << record[MONTH] <<"/" << record[YEAR] << "\n" << "Aantal doden: "<< record[DEATHS]<< endl;
+            //else
+            //cout << "Er zijn geen doden voor dit datum" << endl;
+        }
 
-   while (fin >> temp) {
 
-       row.clear();
+    }
 
-       // read an entire row and
-       // store it in a string variable 'line'
-       getline(fin, line);
-
-       // used for breaking words
-       stringstream s(line);
-
-       // read every column data of a row and
-       // store it in a string variable, 'word'
-       while (getline(s, word, ', ')) {
-
-           // add all the column data
-           // of a row to a vector
-           row.push_back(word);
-       }
-
-       // convert string to integer for comparision
-       roll2 = stoi(row[0]);
-
-       // Compare the roll number
-       if (roll2 == rollnum) {
-
-           // Print the found data
-           count = 1;
-           cout << "cases " << row[0] << " : \n";
-           cout << "deaths: " << row[1] << "\n";
-           cout << "continentExp: " << row[2] << "\n";
-           cout << "Cumulative_number_for_14_days_of_COVID-19_cases_per_100000: " << row[3] << "\n";
-           cout << "countryterritoryCode: " << row[4] << "\n";
-           cout << "year: " << row[5] << "\n";
-           break;
-       }
-   }
-   if (count == 0)
-       cout << "Record not found\n";
+    return 0;
 }
