@@ -10,4 +10,5 @@ Service gaat (afhankelijk van de comando van de gebruiker) doden , besmettingen 
 Het programma server.py zorgt dat als benternet server niet werkt , dan kan je server.py runnen op je rspberry pi en die gaat werken als proxy server.    
 In dit geval moet je natuurlijk deze 2 lijnen aanpassen:                                                                                    
 sub->connectTo("tcp://benternet.pxl-ea-ict.be:24042"); naar je eigen ip met een poort bv. "tcp://192.168.1.1:5554"                       
-send->connectTo("tcp://benternet.pxl-ea-ict.be:24041"); naar je eigen ip met een poort bv. "tcp://192.168.1.1:5555"
+send->connectTo("tcp://benternet.pxl-ea-ict.be:24041"); naar je eigen ip met een poort bv. "tcp://192.168.1.1:5555"                                
+In student programma als in covid_service programma.
